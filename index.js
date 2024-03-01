@@ -73,17 +73,19 @@ async function run() {
     
     */
     app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
+      console.log(req.headers);
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
 
     // crete users
     app.post("/users", async (req, res) => {
+      //
       const user = req.body;
       const query = { email: user.email };
       // existingUser no save db for google
       const existingUser = await usersCollection.findOne(query);
-      console.log(existingUser);
+      //console.log(existingUser);
       if (existingUser) {
         return res.send({ message: "user already exists" });
       }
@@ -111,7 +113,7 @@ async function run() {
 
     app.patch("/users/admin/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
+      //console.log(id);
       const filter = { _id: new ObjectId(id) };
       const updatedDoc = {
         $set: {
@@ -119,7 +121,7 @@ async function run() {
         },
       };
       const result = await usersCollection.updateOne(filter, updatedDoc);
-      console.log(result);
+      //console.log(result);
       res.send(result);
     });
 
@@ -163,7 +165,7 @@ async function run() {
 
     app.post("/carts", async (req, res) => {
       const item = req.body;
-      console.log(item);
+      //console.log(item);
       const result = await cartCollection.insertOne(item);
       res.send(result);
     });
@@ -186,7 +188,7 @@ async function run() {
     app.post("/create-payment-intent", async (req, res) => {
       const { price } = req.body;
       const amount = parseInt(price * 100);
-      console.log("amount inside ", amount);
+      //console.log("amount inside ", amount);
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amount,
         currency: "usd",
@@ -207,7 +209,7 @@ async function run() {
         },
       };
       const deleteResult = await cartCollection.deleteMany(query);
-      console.log("info", payment);
+      //console.log("info", payment);
       res.send({ paymentResult, deleteResult });
     });
     //  stats of analytics
@@ -277,7 +279,7 @@ async function run() {
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
-    // console.log(" S23 unlock tool itel S23 unlock tool 47 minute,");
+    console.log("mongodb ping,");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
